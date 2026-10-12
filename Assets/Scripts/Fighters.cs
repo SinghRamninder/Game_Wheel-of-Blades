@@ -60,6 +60,8 @@ public class Fighters : MonoBehaviour
             walkAngle += (moveSpeed / wheelController.radius) * dt;
         }
 
+        walkAngle += wheelController.spin * dt;
+
         float x = Mathf.Sin(walkAngle) * wheelController.radius;
         float y = Mathf.Cos(walkAngle) * wheelController.radius;
 
