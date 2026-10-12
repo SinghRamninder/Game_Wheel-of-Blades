@@ -5,7 +5,7 @@ public class WheelController : MonoBehaviour
 {
     [SerializeField] private Fighters[] fighters;
     private Rigidbody rb;
-    private float radius;
+    public float radius;
 
     private void Start()
     {
@@ -19,7 +19,7 @@ public class WheelController : MonoBehaviour
 
         foreach (Fighters fighter in fighters)
         {
-            float fighterTorque = - fighter.mass * Mathf.Abs(Physics.gravity.y) * radius * Mathf.Sin(fighter.angleFromCenter);
+            float fighterTorque = fighter.mass * 9.81f * radius * Mathf.Sin(fighter.walkAngle);
             torque += fighterTorque;
         }
 
