@@ -11,10 +11,12 @@ public class WheelController : MonoBehaviour
     private float wheelAngle;
 
     private Quaternion startRotation;
+    private Vector3 startPosition;
 
     private void Start()
     {
         startRotation = transform.rotation;
+        startPosition = transform.position;
         radius = transform.lossyScale.x / 2f;
     }
 
@@ -33,5 +35,6 @@ public class WheelController : MonoBehaviour
 
         wheelAngle += spin * dt;
         transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, -wheelAngle * Mathf.Rad2Deg)) * startRotation;
+        transform.position = startPosition + new Vector3(wheelAngle * radius, 0f, 0f);
     }
 }
