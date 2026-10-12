@@ -475,6 +475,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4566390223753106929, guid: acd8c4148cf99584195b07aeb0585f26, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -636,6 +640,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5284166615100649114, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
   m_PrefabInstance: {fileID: 932396942}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &394110408 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+  m_PrefabInstance: {fileID: 932396942}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d33c287c101a3b144a156a3f0250c122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -817,11 +832,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &905444620 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6847493923143034935, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
+  m_PrefabInstance: {fileID: 2081499766}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &905444624 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6036590003892859892, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
+  m_PrefabInstance: {fileID: 2081499766}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &905444625 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6074511322339766925, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
   m_PrefabInstance: {fileID: 2081499766}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &905444626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 905444620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc71e2faa7647f24db9ab300f6e9cb29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AttackEvents
+  sword: {fileID: 394110408}
 --- !u!1001 &932396942
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -830,6 +868,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 461223559}
     m_Modifications:
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: owner
+      value: 
+      objectReference: {fileID: 1377273653}
     - target: {fileID: 4764510604297581600, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
       propertyPath: m_Name
       value: Pirate_Sword
@@ -894,9 +936,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1377273655}
   - component: {fileID: 1377273654}
+  - component: {fileID: 1377273656}
   m_Layer: 0
   m_Name: Fighter1Root
-  m_TagString: Untagged
+  m_TagString: Pirate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -917,8 +960,10 @@ MonoBehaviour:
   opponent: {fileID: 1898320059}
   moveSpeed: 1
   minGap: 0.5
+  animator: {fileID: 905444624}
   moveLeftKey: 97
   moveRightKey: 100
+  attackKey: 32
   mass: 2
   footPushForce: 5
   startWalkAngle: -0.3
@@ -941,6 +986,29 @@ Transform:
   - {fileID: 905444625}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!136 &1377273656
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377273653}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.160943
+  m_Height: 2.049131
+  m_Direction: 1
+  m_Center: {x: 1.4477937e-17, y: 0.8679691, z: 0.0020409299}
 --- !u!1 &1400887610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1197,9 +1265,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1898320060}
   - component: {fileID: 1898320059}
+  - component: {fileID: 1898320061}
   m_Layer: 0
   m_Name: Fighter2Root
-  m_TagString: Untagged
+  m_TagString: Pirate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1220,8 +1289,10 @@ MonoBehaviour:
   opponent: {fileID: 1377273654}
   moveSpeed: 1
   minGap: 0.5
+  animator: {fileID: 0}
   moveLeftKey: 276
   moveRightKey: 275
+  attackKey: 281
   mass: 2
   footPushForce: 5
   startWalkAngle: 0.3
@@ -1244,6 +1315,29 @@ Transform:
   - {fileID: 1285107468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!136 &1898320061
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898320058}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.21173504
+  m_Height: 2.049131
+  m_Direction: 1
+  m_Center: {x: 1.37176986e-17, y: 0.8679691, z: 0.052833047}
 --- !u!1 &1996403610
 GameObject:
   m_ObjectHideFlags: 0
@@ -1308,6 +1402,14 @@ PrefabInstance:
       propertyPath: m_Avatar
       value: 
       objectReference: {fileID: 9000000, guid: 067eed6340abfa94383b955a0cb27fad, type: 3}
+    - target: {fileID: 6036590003892859892, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
+      propertyPath: m_UpdateMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6036590003892859892, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
+      propertyPath: m_AnimatePhysics
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6036590003892859892, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
       propertyPath: m_WarningMessage
       value: "\nBinding warning: Some generic clip(s) animate transforms that are
@@ -1404,7 +1506,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 910497884769731922, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 394110403}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6847493923143034935, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 905444626}
   m_SourcePrefab: {fileID: 100100000, guid: ffe3ad23be052d84c83952a08a0f52c7, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

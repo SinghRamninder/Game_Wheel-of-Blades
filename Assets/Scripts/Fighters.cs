@@ -6,10 +6,12 @@ public class Fighters : MonoBehaviour
     [SerializeField] private Fighters opponent;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float minGap = 0.5f;
+    [SerializeField] private Animator animator;
 
     [Header("Controls")]
     [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
     [SerializeField] private KeyCode moveRightKey = KeyCode.D;
+    [SerializeField] private KeyCode attackKey = KeyCode.Space;
 
     [Header("Properties")]
     public float mass = 2f;
@@ -51,6 +53,11 @@ public class Fighters : MonoBehaviour
         if (Input.GetKeyUp(moveRightKey))
         {
             moveRight = false;
+        }
+
+        if (animator != null && Input.GetKeyDown(attackKey))
+        {
+            animator.SetTrigger("Attack");
         }
     }
 
