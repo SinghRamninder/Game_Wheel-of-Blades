@@ -847,10 +847,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fighters
   wheelController: {fileID: 1439514624}
-  moveSpeed: 2
+  opponent: {fileID: 1898320059}
+  moveSpeed: 1
+  minGap: 0.5
   moveLeftKey: 97
   moveRightKey: 100
   mass: 2
+  footPushForce: 5
+  startWalkAngle: -0.3
   walkAngle: 0
 --- !u!4 &1377273655
 Transform:
@@ -1110,8 +1114,8 @@ MonoBehaviour:
   fighters:
   - {fileID: 1377273654}
   - {fileID: 1898320059}
-  inertia: 6
-  damping: 0.8
+  inertia: 15
+  damping: 1.8
   radius: 0
   spin: 0
 --- !u!1 &1898320058
@@ -1144,10 +1148,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fighters
   wheelController: {fileID: 1439514624}
-  moveSpeed: 2
+  opponent: {fileID: 1377273654}
+  moveSpeed: 1
+  minGap: 0.5
   moveLeftKey: 276
   moveRightKey: 275
   mass: 2
+  footPushForce: 5
+  startWalkAngle: 0.3
   walkAngle: 0
 --- !u!4 &1898320060
 Transform:

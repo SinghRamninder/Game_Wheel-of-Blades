@@ -3,7 +3,9 @@ using UnityEngine;
 public class Fighters : MonoBehaviour
 {
     [SerializeField] private WheelController wheelController;
+    [SerializeField] private Fighters opponent;
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float minGap = 0.5f;
 
     [Header("Controls")]
     [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
@@ -11,14 +13,20 @@ public class Fighters : MonoBehaviour
 
     [Header("Properties")]
     public float mass = 2f;
-    [HideInInspector] public float walkAngle = 0f;
+    public float footPushForce = 5f;
+    [SerializeField] private float startWalkAngle = 0f;
+    [SerializeField] private float fallAngleDegree = 70f;
+    [HideInInspector] public float walkAngle = 0.3f;
+    [HideInInspector] public bool hasFallen = false;
     private bool moveLeft = false;
     private bool moveRight = false;
     private Vector3 startPosition;
+    private Vector3 fallVelocity;
 
     private void Start()
     {
         startPosition = transform.position;
+        walkAngle = startWalkAngle;
     }
 
     private void Update()
@@ -50,6 +58,13 @@ public class Fighters : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
 
+        if (hasFallen)
+        {
+            fallVelocity.y -= 9.81f * dt;
+            transform.position += fallVelocity * dt;
+            return;
+        }
+
         if (moveLeft)
         {
             walkAngle -= (moveSpeed / wheelController.radius) * dt;
@@ -62,9 +77,36 @@ public class Fighters : MonoBehaviour
 
         walkAngle += wheelController.spin * dt;
 
+        float gap = (walkAngle - opponent.walkAngle) * wheelController.radius;
+        if (Mathf.Abs(gap) < minGap)
+        {
+            walkAngle = opponent.walkAngle + Mathf.Sign(gap) * minGap / wheelController.radius;
+        }
+
+        if (Mathf.Abs(walkAngle) > fallAngleDegree * Mathf.Deg2Rad)
+        {
+            hasFallen = true;
+            fallVelocity = new Vector3(Mathf.Sign(walkAngle) * 2f, 1f, 0f);
+        }
+
         float x = Mathf.Sin(walkAngle) * wheelController.radius;
         float y = Mathf.Cos(walkAngle) * wheelController.radius;
 
         transform.position = new Vector3(wheelController.transform.position.x + x, wheelController.transform.position.y + y, startPosition.z);
+    }
+
+    public float GetInput()
+    {
+        float input = 0f;
+        if (moveLeft)
+        {
+            input -= 1f;
+        }
+        if (moveRight)
+        {
+            input += 1f;
+        }
+
+        return input;
     }
 }
