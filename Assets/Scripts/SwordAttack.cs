@@ -22,7 +22,7 @@ public class SwordAttack : MonoBehaviour
 
         if (other.gameObject != owner && other.gameObject.CompareTag("Pirate"))
         {
-            Fighters opponent = other.gameObject.GetComponent<Fighters>();
+            HealthAndDamage opponent = other.gameObject.GetComponent<HealthAndDamage>();
             if (opponent != null)
             {
                 hasHit = true;
