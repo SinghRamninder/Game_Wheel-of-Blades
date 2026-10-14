@@ -1,11 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HealthAndDamage : MonoBehaviour
 {
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private GameObject bloodEffectPrefab;
+    [SerializeField] private GameObject healthBar;
+    [SerializeField] private float damageWobbleSpeed = 5f;
+    [SerializeField] private float damageWobbleAmount = 5f;
+    private Slider healthSlider;
     private float currentHealth;
     private Fighters fighter;
+
+    private RectTransform rectTransform;
+    private Quaternion startRotation;
+    private bool applyDamage = false;
+    private float wobbleTimer = 0f;
+    private float wobbleDuration = 0.5f;
+
 
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
@@ -14,7 +26,38 @@ public class HealthAndDamage : MonoBehaviour
     private void Start()
     {
         currentHealth = maxHealth;
+        healthSlider = healthBar.GetComponent<Slider>();
         fighter = GetComponent<Fighters>();
+        rectTransform = healthBar.GetComponent<RectTransform>();
+        startRotation = rectTransform.localRotation;
+    }
+
+    private void LateUpdate()
+    {
+        if (applyDamage)
+        {
+            if (Mathf.Abs(healthSlider.value - (currentHealth / maxHealth)) > 0.001f)
+            {
+                healthSlider.value = Mathf.MoveTowards(healthSlider.value, currentHealth / maxHealth, Time.deltaTime * damageWobbleSpeed);
+
+                wobbleTimer += Time.deltaTime;
+
+                float progress = Mathf.Clamp01(wobbleTimer / wobbleDuration);
+
+                float amplitude = (1f - progress) * damageWobbleAmount;
+
+                float zAngle = Mathf.Sin(wobbleTimer * damageWobbleSpeed) * amplitude;
+
+                rectTransform.localRotation = startRotation * Quaternion.Euler(0f, 0f, zAngle);
+
+            }
+            else
+            {
+                healthSlider.value = currentHealth / maxHealth;
+                rectTransform.localRotation = startRotation;
+                applyDamage = false;
+            }
+        }
     }
 
     public void TakeDamage(float damage)
@@ -26,6 +69,7 @@ public class HealthAndDamage : MonoBehaviour
     {
         if (IsDead) return;
 
+        applyDamage = true;
         currentHealth = Mathf.Max(0f, currentHealth - damage);
 
         if (bloodEffectPrefab != null)

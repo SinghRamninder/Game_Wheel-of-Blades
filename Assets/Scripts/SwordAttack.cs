@@ -1,8 +1,17 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SwordAttack : MonoBehaviour
 {
+    public enum AttackType
+    {
+        Normal,
+        Counter,
+        Parry
+    }
+
     [SerializeField] private GameObject owner;
+    [SerializeField] private GameObject opponent;
     [Tooltip("Thickness of the blade used for the swept hit test.")]
     [SerializeField] private float bladeRadius = 0.035f;
     [SerializeField] private TrailRenderer trail;
@@ -19,9 +28,12 @@ public class SwordAttack : MonoBehaviour
 
     private Collider col;
     private Fighters ownerFighter;
+    private Fighters opponentFighter;
+
     private bool hasHit = false;
     private bool isActive = false;
     private float damage;
+    private AttackType attackType = AttackType.Normal;
     private Vector3 bladeStartLocal;
     private Vector3 bladeEndLocal;
     private Vector3 prevStart;
@@ -32,6 +44,7 @@ public class SwordAttack : MonoBehaviour
         col = GetComponent<Collider>();
         col.enabled = false;
         ownerFighter = owner != null ? owner.GetComponent<Fighters>() : GetComponentInParent<Fighters>();
+        opponentFighter = opponent.GetComponent<Fighters>();
         if (trail != null) trail.emitting = false;
         CalculateBlade();
     }
@@ -64,9 +77,10 @@ public class SwordAttack : MonoBehaviour
         bladeEndLocal = max;
     }
 
-    public void BeginAttack(float attackDamage, bool counterAttack)
+    public void BeginAttack(float attackDamage, bool counterAttack, AttackType attackTypeOption)
     {
         damage = attackDamage;
+        attackType = attackTypeOption;
         IsCounterAttack = counterAttack;
         hasHit = false;
         onGoingParry = false;
@@ -119,6 +133,8 @@ public class SwordAttack : MonoBehaviour
     public void Parried()
     {
         onGoingParry = true;
+        attackType = AttackType.Parry;
+        SetKnock();
         Close();
     }
 
@@ -174,8 +190,8 @@ public class SwordAttack : MonoBehaviour
         if (hasHit || onGoingParry) return;
         if (other.gameObject == owner || !other.CompareTag("Pirate")) return;
 
-        HealthAndDamage opponent = other.GetComponent<HealthAndDamage>();
-        if (opponent == null || opponent.IsDead) return;
+        HealthAndDamage opponentHealth = other.GetComponent<HealthAndDamage>();
+        if (opponentHealth == null || opponentHealth.IsDead) return;
 
         hasHit = true;
         canParryBeforeHit = false;
@@ -185,8 +201,33 @@ public class SwordAttack : MonoBehaviour
         away.y = 0f;
         Vector3 direction = (swing.normalized + away.normalized).normalized;
 
-        opponent.TakeDamage(damage, hitPoint, direction);
+        opponentHealth.TakeDamage(damage, hitPoint, direction);
+        SetKnock();
+
         CombatFeedback.HitStop(IsCounterAttack ? 0.12f : 0.08f);
         CombatFeedback.Shake(IsCounterAttack ? 0.035f : 0.02f, 0.18f);
+    }
+
+    private void SetKnock()
+    {
+        float dir = Mathf.Sign(opponentFighter.walkAngle - ownerFighter.walkAngle);
+        switch (attackType)
+        {
+            case AttackType.Normal:
+                opponentFighter.Knock(dir * ownerFighter.fighterProperties.attackImpusle);
+                ownerFighter.Knock(-dir * ownerFighter.fighterProperties.attackImpusle * ownerFighter.fighterProperties.recoil);
+                Debug.Log("Normal attack knock");
+                break;
+            case AttackType.Counter:
+                opponentFighter.Knock(dir * ownerFighter.fighterProperties.counterAttackImpusle);
+                ownerFighter.Knock(-dir * ownerFighter.fighterProperties.counterAttackImpusle * ownerFighter.fighterProperties.recoil);
+                Debug.Log("Counter attack knock");
+                break;
+            case AttackType.Parry:
+                opponentFighter.Knock(dir * ownerFighter.fighterProperties.parryImpusle);
+                ownerFighter.Knock(-dir * ownerFighter.fighterProperties.parryImpusle * ownerFighter.fighterProperties.recoil);
+                Debug.Log("Parry knock");
+                break;
+        }
     }
 }

@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5284166615100649114}
+  - component: {fileID: -8985501785514892662}
   - component: {fileID: 9149900605836386623}
   - component: {fileID: 6421584783961396725}
   - component: {fileID: 1045893546915500646}
   - component: {fileID: 4843152470460618359}
-  - component: {fileID: -8985501785514892662}
   m_Layer: 0
   m_Name: Pirate_Sword
   m_TagString: Untagged
@@ -36,6 +36,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8985501785514892662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4764510604297581600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d33c287c101a3b144a156a3f0250c122, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
+  owner: {fileID: 0}
+  opponent: {fileID: 0}
+  bladeRadius: 0.035
+  trail: {fileID: 0}
+  parryCuePrefab: {fileID: 0}
+  canParryBeforeHit: 0
+  onGoingParry: 0
 --- !u!33 &9149900605836386623
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -143,16 +162,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-8985501785514892662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4764510604297581600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d33c287c101a3b144a156a3f0250c122, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SwordAttack
-  owner: {fileID: 0}

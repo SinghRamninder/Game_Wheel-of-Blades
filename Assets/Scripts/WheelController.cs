@@ -29,8 +29,8 @@ public class WheelController : MonoBehaviour
         {
             if (fighter.hasFallen) continue;
 
-            torque += fighter.mass * 9.81f * radius * Mathf.Sin(fighter.walkAngle);
-            torque += -fighter.GetInput() * fighter.footPushForce * radius;
+            torque += fighter.fighterProperties.mass * 9.81f * radius * Mathf.Sin(fighter.walkAngle);
+            torque += -fighter.GetInput() * fighter.fighterProperties.footPushForce * radius;
         }
 
         spin += (torque / inertia) * dt;

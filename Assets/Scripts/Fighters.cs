@@ -12,22 +12,11 @@ public class Fighters : MonoBehaviour
     private const string DefeatedState = "Defeated";
     private static readonly string[] AttackStates = { "Attack1", "Attack2" };
 
+    public FighterProperties fighterProperties;
     [SerializeField] private WheelController wheelController;
     [SerializeField] private Fighters opponent;
-    [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float minGap = 0.5f;
     [SerializeField] private Animator animator;
     [SerializeField] private bool mirrorAnimations = false;
-
-    [Header("Attack and Defense")]
-    [SerializeField] private float attackRange = 0.8f;
-    [Tooltip("How long the parry window stays open after the attacker's AllowParryBeforeHit event.")]
-    [SerializeField] private float parryWindow = 0.3f;
-    [Tooltip("Pressing parry this much before the window opens still counts.")]
-    [SerializeField] private float parryInputBuffer = 0.12f;
-    [SerializeField] private float counterAttackWindow = 0.5f;
-    [SerializeField] private float attackDamage = 10f;
-    [SerializeField] private float counterAttackDamage = 25f;
 
     [Header("Effects")]
     [SerializeField] private GameObject parrySparksPrefab;
@@ -40,10 +29,8 @@ public class Fighters : MonoBehaviour
     [SerializeField] private KeyCode counterAttackKey = KeyCode.W;
 
     [Header("Properties")]
-    public float mass = 2f;
-    public float footPushForce = 5f;
     [SerializeField] private float startWalkAngle = 0f;
-    [SerializeField] private float fallAngleDegree = 70f;
+    private float slide = 0;
     [HideInInspector] public float walkAngle = 0.3f;
     [HideInInspector] public bool hasFallen = false;
     private bool moveLeft = false;
@@ -131,7 +118,7 @@ public class Fighters : MonoBehaviour
         if (State != CombatState.Idle || sword == null) return false;
 
         SetState(CombatState.Attacking);
-        sword.BeginAttack(attackDamage, false);
+        sword.BeginAttack(fighterProperties.attackDamage, false, SwordAttack.AttackType.Normal);
         PlayState(AttackStates[nextAttack], 0.12f);
         nextAttack = (nextAttack + 1) % AttackStates.Length;
         return true;
@@ -155,7 +142,7 @@ public class Fighters : MonoBehaviour
 
         canCounterAttack = false;
         SetState(CombatState.Countering);
-        sword.BeginAttack(counterAttackDamage, true);
+        sword.BeginAttack(fighterProperties.counterAttackDamage, true, SwordAttack.AttackType.Counter);
         PlayState(CounterState, 0.05f);
         return true;
     }
@@ -163,11 +150,11 @@ public class Fighters : MonoBehaviour
     private void UpdateParry()
     {
         if (State != CombatState.Parrying || parrySucceeded || opponentSword == null) return;
-        if (!opponentSword.IsParryWindowOpen(parryWindow)) return;
+        if (!opponentSword.IsParryWindowOpen(fighterProperties.parryWindow)) return;
 
-        if (lastParryPressTime < opponentSword.ParryWindowOpenTime - parryInputBuffer) return;
+        if (lastParryPressTime < opponentSword.ParryWindowOpenTime - fighterProperties.parryInputBuffer) return;
 
-        if (Mathf.Abs(GapToOpponent()) > attackRange) return;
+        if (Mathf.Abs(GapToOpponent()) > fighterProperties.attackRange) return;
 
         ParrySuccess();
     }
@@ -176,7 +163,7 @@ public class Fighters : MonoBehaviour
     {
         parrySucceeded = true;
         canCounterAttack = true;
-        counterAttackEndTime = Time.time + counterAttackWindow;
+        counterAttackEndTime = Time.time + fighterProperties.counterAttackWindow;
 
         Vector3 contact = sword != null ? Vector3.Lerp(sword.BladeCenter, opponentSword.BladeCenter, 0.5f) : opponentSword.BladeCenter;
 
@@ -277,23 +264,26 @@ public class Fighters : MonoBehaviour
 
         if (moveLeft && CanMove)
         {
-            walkAngle -= (moveSpeed / wheelController.radius) * dt;
+            walkAngle -= (fighterProperties.moveSpeed / wheelController.radius) * dt;
         }
 
         if (moveRight && CanMove)
         {
-            walkAngle += (moveSpeed / wheelController.radius) * dt;
+            walkAngle += (fighterProperties.moveSpeed / wheelController.radius) * dt;
         }
 
         walkAngle += wheelController.spin * dt;
 
+        slide -= slide * fighterProperties.slideFriction * dt;
+        walkAngle += slide * dt;
+
         float gap = GapToOpponent();
-        if (Mathf.Abs(gap) < minGap)
+        if (Mathf.Abs(gap) < fighterProperties.minGap)
         {
-            walkAngle = opponent.walkAngle + Mathf.Sign(gap) * minGap / wheelController.radius;
+            walkAngle = opponent.walkAngle + Mathf.Sign(gap) * fighterProperties.minGap / wheelController.radius;
         }
 
-        if (Mathf.Abs(walkAngle) > fallAngleDegree * Mathf.Deg2Rad)
+        if (Mathf.Abs(walkAngle) > fighterProperties.fallAngleDegree * Mathf.Deg2Rad)
         {
             fallVelocity = new Vector3(Mathf.Sign(walkAngle) * 2f, 1f, 0f);
             hasFallen = true;
@@ -309,6 +299,11 @@ public class Fighters : MonoBehaviour
         float y = Mathf.Cos(walkAngle) * wheelController.radius;
 
         transform.position = new Vector3(wheelController.transform.position.x + x, wheelController.transform.position.y + y, startPosition.z);
+    }
+
+    public void Knock(float impulse)
+    {
+        slide += impulse / (fighterProperties.mass * wheelController.radius);
     }
 
     public float GetInput()
