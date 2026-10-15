@@ -22,6 +22,9 @@ public class WheelController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Frozen during announcements: the wheel keeps its current rotation and position.
+        if (GameState.IsFrozen) return;
+
         float dt = Time.fixedDeltaTime;
 
         float torque = 0f;

@@ -60,7 +60,6 @@ public class GameManager : MonoBehaviour
 
         if (matchOver)
         {
-            // The victory screen follows once the last round's winner banner has gone.
             if (!victoryShown && !roundAnnouncement.IsShowing)
             {
                 victoryShown = true;
@@ -77,6 +76,7 @@ public class GameManager : MonoBehaviour
                 roundRunning = true;
                 fighter1.SetCanFight(true);
                 fighter2.SetCanFight(true);
+                GameState.Unfreeze();
             }
             return;
         }
@@ -107,7 +107,6 @@ public class GameManager : MonoBehaviour
             breakTimeLeft -= Time.deltaTime;
             if (breakTimeLeft <= 0f)
             {
-                // Only during the regular rounds: in tiebreakers (currentRound > totalRounds) the rounds left would be negative.
                 if (currentRound < totalRounds && (fighter1Wins + (totalRounds-currentRound) < fighter2Wins || fighter2Wins + (totalRounds-currentRound) < fighter1Wins))
                 {
                     EndMatch();
@@ -134,6 +133,7 @@ public class GameManager : MonoBehaviour
 
         fighter1.SetCanFight(false);
         fighter2.SetCanFight(false);
+        GameState.Freeze();
 
         roundTimeLeft = roundDuration;
         timer.text = Mathf.CeilToInt(roundTimeLeft).ToString();
@@ -151,7 +151,6 @@ public class GameManager : MonoBehaviour
 
     private void PlayRoundMusic()
     {
-        // Final round and every tiebreaker get the match point music.
         musicSource.clip = currentRound >= totalRounds ? matchPointMusic : normalFightMusic;
         musicSource.loop = true;
         musicSource.volume = musicVolume;
@@ -171,7 +170,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Rounds after the regular ones, played while the wins are level.
     private bool IsTiebreaker()
     {
         return currentRound > totalRounds;
@@ -195,6 +193,7 @@ public class GameManager : MonoBehaviour
         roundRunning = false;
         fighter1.SetCanFight(false);
         fighter2.SetCanFight(false);
+        GameState.Freeze();
         musicFadingOut = true;
 
         if (winner == fighter1)
@@ -214,8 +213,6 @@ public class GameManager : MonoBehaviour
         fighter2RoundIndicator.SetWins(fighter2Wins);
         roundAnnouncement.ShowMessage(winner != null ? winner.name + " Wins!" : "Draw!", winnerBannerDelay);
 
-        // After the last regular round (or a tiebreaker) the match only ends when someone is ahead;
-        // otherwise another tiebreaker round is played.
         if (currentRound >= totalRounds && fighter1Wins != fighter2Wins)
         {
             EndMatch();

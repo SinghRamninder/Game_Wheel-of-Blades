@@ -298,10 +298,19 @@ public class Fighters : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
 
+        // A fighter who fell off the wheel keeps falling, even while the game is frozen.
         if (hasFallen)
         {
             fallVelocity.y -= 9.81f * dt;
             transform.position += fallVelocity * dt;
+            return;
+        }
+
+        // Frozen during announcements: no walking, spin or knockback. A fighter on the wheel is still
+        // placed at its current angle, so a reset at the start of a round shows up straight away.
+        if (GameState.IsFrozen)
+        {
+            PlaceOnWheel();
             return;
         }
 
@@ -338,6 +347,11 @@ public class Fighters : MonoBehaviour
             }
         }
 
+        PlaceOnWheel();
+    }
+
+    private void PlaceOnWheel()
+    {
         float x = Mathf.Sin(walkAngle) * wheelController.radius;
         float y = Mathf.Cos(walkAngle) * wheelController.radius;
 
