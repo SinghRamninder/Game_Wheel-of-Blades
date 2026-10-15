@@ -8,6 +8,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Fighters fighter2;
     [SerializeField] private WheelController wheelController;
 
+    [Header("UI")]
+    [SerializeField] private RoundAnnouncement roundAnnouncement;
+    [SerializeField] private RoundIndicator fighter1RoundIndicator;
+    [SerializeField] private RoundIndicator fighter2RoundIndicator;
+
     [Header("Match")]
     [SerializeField] private int totalRounds = 5;
     [SerializeField] private float roundDuration = 60f;
@@ -24,18 +29,33 @@ public class GameManager : MonoBehaviour
     private float roundTimeLeft;
     private float breakTimeLeft;
     private bool roundRunning = false;
+    private bool waitingForAnnouncement = false;
     private bool matchOver = false;
 
     private void Start()
     {
         fighter1Health = fighter1.GetComponent<HealthAndDamage>();
         fighter2Health = fighter2.GetComponent<HealthAndDamage>();
+        fighter1RoundIndicator.SetWins(0);
+        fighter2RoundIndicator.SetWins(0);
         StartRound();
     }
 
     private void Update()
     {
         if (matchOver) return;
+
+        if (waitingForAnnouncement)
+        {
+            if (!roundAnnouncement.IsShowing)
+            {
+                waitingForAnnouncement = false;
+                roundRunning = true;
+                fighter1.SetCanFight(true);
+                fighter2.SetCanFight(true);
+            }
+            return;
+        }
 
         if (roundRunning)
         {
@@ -87,11 +107,13 @@ public class GameManager : MonoBehaviour
             wheelController.spin = 0f;
         }
 
-        fighter1.SetCanFight(true);
-        fighter2.SetCanFight(true);
+        fighter1.SetCanFight(false);
+        fighter2.SetCanFight(false);
 
         roundTimeLeft = roundDuration;
-        roundRunning = true;
+        timer.text = Mathf.CeilToInt(roundTimeLeft).ToString();
+        roundAnnouncement.Show(currentRound, currentRound == totalRounds);
+        waitingForAnnouncement = true;
         Debug.Log("Round " + currentRound + " / " + totalRounds + " started!");
     }
 
@@ -129,6 +151,9 @@ public class GameManager : MonoBehaviour
             ties++;
             Debug.Log("Round " + currentRound + ": Tie!");
         }
+
+        fighter1RoundIndicator.SetWins(fighter1Wins);
+        fighter2RoundIndicator.SetWins(fighter2Wins);
 
         Debug.Log("Score: " + fighter1.name + " " + fighter1Wins + " - " + fighter2Wins + " " + fighter2.name + " (ties: " + ties + ")");
 

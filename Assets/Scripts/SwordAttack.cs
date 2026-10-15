@@ -216,17 +216,14 @@ public class SwordAttack : MonoBehaviour
             case AttackType.Normal:
                 opponentFighter.Knock(dir * ownerFighter.fighterProperties.attackImpusle);
                 ownerFighter.Knock(-dir * ownerFighter.fighterProperties.attackImpusle * ownerFighter.fighterProperties.recoil);
-                Debug.Log("Normal attack knock");
                 break;
             case AttackType.Counter:
                 opponentFighter.Knock(dir * ownerFighter.fighterProperties.counterAttackImpusle);
                 ownerFighter.Knock(-dir * ownerFighter.fighterProperties.counterAttackImpusle * ownerFighter.fighterProperties.recoil);
-                Debug.Log("Counter attack knock");
                 break;
             case AttackType.Parry:
                 opponentFighter.Knock(dir * ownerFighter.fighterProperties.parryImpusle);
                 ownerFighter.Knock(-dir * ownerFighter.fighterProperties.parryImpusle * ownerFighter.fighterProperties.recoil);
-                Debug.Log("Parry knock");
                 break;
         }
     }

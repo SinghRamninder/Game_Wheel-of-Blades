@@ -1,36 +1,113 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class WordGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject wheel;
-    [SerializeField] private GameObject lastPlane;
+    [SerializeField] private GameObject lastStartPlane;
+    [SerializeField] private GameObject lastEndPlane;
     [SerializeField] private GameObject plane;
+    [SerializeField] private PlatformPool platformPlane;
     [SerializeField] private float planeSpawnDistance = 18f;
+    [SerializeField] private float planeDestroyDistance = 20f;
+
+    private List<GameObject> activePlanes = new List<GameObject>();
+
+    private void Start()
+    {
+        if (!activePlanes.Contains(lastStartPlane))
+            activePlanes.Add(lastStartPlane);
+
+        if (!activePlanes.Contains(lastEndPlane))
+            activePlanes.Add(lastEndPlane);
+    }
 
     private void Update()
     {
-        Renderer lastPlaneRenderer = lastPlane.GetComponent<Renderer>();
+        Renderer lastEndPlaneRenderer = lastEndPlane.GetComponent<Renderer>();
+        Renderer lastStartPlaneRenderer = lastStartPlane.GetComponent<Renderer>();
 
-        float lastPlaneLength = lastPlaneRenderer.bounds.size.x;
-
-        float lastPlaneEnd = lastPlane.transform.position.x + lastPlaneLength / 2f;
+        float lastPlaneEnd = lastEndPlaneRenderer.bounds.max.x;
+        float lastPlaneStart = lastStartPlaneRenderer.bounds.min.x;
 
         if (wheel.transform.position.x + planeSpawnDistance > lastPlaneEnd)
         {
-            CreatePlatformChunk();
+            CreatePlatformChunk(true);
         }
+        else if (wheel.transform.position.x - planeSpawnDistance < lastPlaneStart)
+        {
+            CreatePlatformChunk(false);
+        }
+
+        RemovePlatformChunk();
     }
 
-    private void CreatePlatformChunk()
+    private void CreatePlatformChunk(bool isEnd)
     {
-        Renderer renderer = lastPlane.GetComponent<Renderer>();
+        Renderer renderer = lastEndPlane.GetComponent<Renderer>();
 
         float planeLength = renderer.bounds.size.x;
 
-        Vector3 spawnPosition = lastPlane.transform.position + lastPlane.transform.right * planeLength;
+        if (isEnd)
+        {
+            Vector3 spawnPosition = lastEndPlane.transform.position + lastEndPlane.transform.right * planeLength;
+            GameObject spawnPlane = platformPlane.GetPlatform();
+            spawnPlane.transform.position = spawnPosition;
+            activePlanes.Add(spawnPlane);
 
-        GameObject spawnPlane = Instantiate(plane, spawnPosition, lastPlane.transform.rotation);
+            lastEndPlane = spawnPlane;
+        }
+        else
+        {
+            Vector3 spawnPosition = lastStartPlane.transform.position - lastStartPlane.transform.right * planeLength;
+            GameObject spawnPlane = platformPlane.GetPlatform();
+            spawnPlane.transform.position = spawnPosition;
+            activePlanes.Add(spawnPlane);
 
-        lastPlane = spawnPlane;
+            lastStartPlane = spawnPlane;
+        }
+    }
+
+    private void RemovePlatformChunk()
+    {
+        List<GameObject> PlanesToRemove = new List<GameObject>();
+
+        foreach (GameObject currentPlane in activePlanes)
+        {
+            Renderer renderer = currentPlane.GetComponent<Renderer>();
+
+            float planeStart = renderer.bounds.min.x;
+            float planeEnd = renderer.bounds.max.x;
+
+            if (planeEnd < wheel.transform.position.x - planeDestroyDistance || planeStart > wheel.transform.position.x + planeDestroyDistance)
+            {
+                PlanesToRemove.Add(currentPlane);
+            }
+        }
+
+        foreach (GameObject currentPlane in PlanesToRemove)
+        {
+            activePlanes.Remove(currentPlane);
+            platformPlane.ReturnPlatform(currentPlane);
+        }
+
+        if (activePlanes.Count > 0)
+        {
+            lastStartPlane = activePlanes[0];
+            lastEndPlane = activePlanes[0];
+
+            foreach (GameObject currentPlane in activePlanes)
+            {
+                if (currentPlane.transform.position.x < lastStartPlane.transform.position.x)
+                {
+                    lastStartPlane = currentPlane;
+                }
+
+                if (currentPlane.transform.position.x > lastEndPlane.transform.position.x)
+                {
+                    lastEndPlane = currentPlane;
+                }
+            }
+        }
     }
 }
