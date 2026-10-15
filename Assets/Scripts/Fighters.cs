@@ -10,6 +10,8 @@ public class Fighters : MonoBehaviour
     private const string CounterState = "Counter";
     private const string HitReactState = "HitReact";
     private const string DefeatedState = "Defeated";
+    private const string WalkForwardState = "WalkForward";
+    private const string WalkBackState = "WalkBack";
     private static readonly string[] AttackStates = { "Attack1", "Attack2" };
 
     public FighterProperties fighterProperties;
@@ -17,6 +19,7 @@ public class Fighters : MonoBehaviour
     [SerializeField] private Fighters opponent;
     [SerializeField] private Animator animator;
     [SerializeField] private bool mirrorAnimations = false;
+    [SerializeField] private float walkAnimationSpeed = 0.75f;
 
     [Header("Effects")]
     [SerializeField] private GameObject parrySparksPrefab;
@@ -51,6 +54,7 @@ public class Fighters : MonoBehaviour
     private bool canCounterAttack = false;
     private float counterAttackEndTime;
     private bool canFight = true;
+    private int walkDirection = 0;
 
     private void Start()
     {
@@ -60,6 +64,7 @@ public class Fighters : MonoBehaviour
         opponentSword = opponent.GetComponentInChildren<SwordAttack>();
         if (animator != null){
             animator.SetBool("Mirror", mirrorAnimations);
+            animator.SetFloat("WalkSpeed", fighterProperties.moveSpeed / walkAnimationSpeed);
         }
     }
 
@@ -87,6 +92,35 @@ public class Fighters : MonoBehaviour
         UpdateParry();
         UpdateCounterAttackWindow();
         UpdateActionEnd();
+        UpdateWalkAnimation();
+    }
+
+    private void UpdateWalkAnimation()
+    {
+        if (State != CombatState.Idle) return;
+
+        float facing = Mathf.Sign(transform.forward.x);
+        int direction = (int)Mathf.Sign(GetInput() * facing);
+        if (GetInput() == 0f)
+        {
+            direction = 0;
+        }
+
+        if (direction == walkDirection) return;
+        walkDirection = direction;
+
+        if (direction > 0)
+        {
+            PlayState(WalkForwardState, 0.12f);
+        }
+        else if (direction < 0)
+        {
+            PlayState(WalkBackState, 0.12f);
+        }
+        else
+        {
+            PlayState(IdleState, 0.15f);
+        }
     }
 
     private void ReadMovementInput()
@@ -235,6 +269,12 @@ public class Fighters : MonoBehaviour
     {
         State = state;
         actionStartTime = Time.time;
+
+        // Actions play their own animation; walking is picked again once the fighter is idle.
+        if (state != CombatState.Idle)
+        {
+            walkDirection = 0;
+        }
     }
 
     private void PlayState(string stateName, float fade)
@@ -309,6 +349,11 @@ public class Fighters : MonoBehaviour
         {
             moveLeft = false;
             moveRight = false;
+            if (walkDirection != 0 && State == CombatState.Idle)
+            {
+                walkDirection = 0;
+                PlayState(IdleState, 0.15f);
+            }
         }
     }
 
@@ -322,6 +367,7 @@ public class Fighters : MonoBehaviour
         moveRight = false;
         canCounterAttack = false;
         parrySucceeded = false;
+        walkDirection = 0;
 
         if (sword != null) sword.Cancel();
         SetState(CombatState.Idle);
