@@ -45,24 +45,26 @@ public class RoundAnnouncement : MonoBehaviour
     public void ShowMessage(string message, float delay = 0f)
     {
         roundText.text = message;
-        
-        if (message.Contains("Player 1", StringComparison.OrdinalIgnoreCase))
-        {
-            winnerIcon.sprite = player1Winner;
-        }
-        else if (message.Contains("Player 2", StringComparison.OrdinalIgnoreCase))
-        {
-            winnerIcon.sprite = player2Winner;
-        }
-        else
-        {
-            winnerIcon.sprite = defaultIcon;
-        }
+        winnerIcon.sprite = GetWinnerIcon(message);
 
         timer = -delay;
         showing = true;
         gameObject.SetActive(true);
         Animate();
+    }
+
+    // The icon that belongs to the player named in the text (also used by the victory screen).
+    public Sprite GetWinnerIcon(string text)
+    {
+        if (text.Contains("Player 1", StringComparison.OrdinalIgnoreCase))
+        {
+            return player1Winner;
+        }
+        if (text.Contains("Player 2", StringComparison.OrdinalIgnoreCase))
+        {
+            return player2Winner;
+        }
+        return defaultIcon;
     }
 
     private void Update()

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RoundAnnouncement roundAnnouncement;
     [SerializeField] private RoundIndicator fighter1RoundIndicator;
     [SerializeField] private RoundIndicator fighter2RoundIndicator;
+    [SerializeField] private VictoryScreen victoryScreen;
 
     [Header("Music")]
     [SerializeField] private AudioSource musicSource;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
     private bool roundRunning = false;
     private bool waitingForAnnouncement = false;
     private bool matchOver = false;
+    private bool victoryShown = false;
     private bool musicFadingOut = false;
 
     private void Start()
@@ -56,7 +58,16 @@ public class GameManager : MonoBehaviour
     {
         UpdateMusicFade();
 
-        if (matchOver) return;
+        if (matchOver)
+        {
+            // The victory screen follows once the last round's winner banner has gone.
+            if (!victoryShown && !roundAnnouncement.IsShowing)
+            {
+                victoryShown = true;
+                ShowVictory();
+            }
+            return;
+        }
 
         if (waitingForAnnouncement)
         {
@@ -96,7 +107,8 @@ public class GameManager : MonoBehaviour
             breakTimeLeft -= Time.deltaTime;
             if (breakTimeLeft <= 0f)
             {
-                if (fighter1Wins + (totalRounds-currentRound) < fighter2Wins || fighter2Wins + (totalRounds-currentRound) < fighter1Wins)
+                // Only during the regular rounds: in tiebreakers (currentRound > totalRounds) the rounds left would be negative.
+                if (currentRound < totalRounds && (fighter1Wins + (totalRounds-currentRound) < fighter2Wins || fighter2Wins + (totalRounds-currentRound) < fighter1Wins))
                 {
                     EndMatch();
                     return;
@@ -125,14 +137,22 @@ public class GameManager : MonoBehaviour
 
         roundTimeLeft = roundDuration;
         timer.text = Mathf.CeilToInt(roundTimeLeft).ToString();
-        roundAnnouncement.Show(currentRound, currentRound == totalRounds);
+        if (IsTiebreaker())
+        {
+            roundAnnouncement.ShowMessage("Tiebreaker");
+        }
+        else
+        {
+            roundAnnouncement.Show(currentRound, currentRound == totalRounds);
+        }
         PlayRoundMusic();
         waitingForAnnouncement = true;
     }
 
     private void PlayRoundMusic()
     {
-        musicSource.clip = currentRound == totalRounds ? matchPointMusic : normalFightMusic;
+        // Final round and every tiebreaker get the match point music.
+        musicSource.clip = currentRound >= totalRounds ? matchPointMusic : normalFightMusic;
         musicSource.loop = true;
         musicSource.volume = musicVolume;
         musicFadingOut = false;
@@ -149,6 +169,12 @@ public class GameManager : MonoBehaviour
             musicSource.Stop();
             musicFadingOut = false;
         }
+    }
+
+    // Rounds after the regular ones, played while the wins are level.
+    private bool IsTiebreaker()
+    {
+        return currentRound > totalRounds;
     }
 
     private Fighters GetWinnerByDeath(bool fighter1Dead, bool fighter2Dead)
@@ -188,7 +214,9 @@ public class GameManager : MonoBehaviour
         fighter2RoundIndicator.SetWins(fighter2Wins);
         roundAnnouncement.ShowMessage(winner != null ? winner.name + " Wins!" : "Draw!", winnerBannerDelay);
 
-        if (currentRound >= totalRounds)
+        // After the last regular round (or a tiebreaker) the match only ends when someone is ahead;
+        // otherwise another tiebreaker round is played.
+        if (currentRound >= totalRounds && fighter1Wins != fighter2Wins)
         {
             EndMatch();
         }
@@ -196,6 +224,14 @@ public class GameManager : MonoBehaviour
         {
             breakTimeLeft = timeBetweenRounds;
         }
+    }
+
+    private void ShowVictory()
+    {
+        if (fighter1Wins == fighter2Wins) return;
+
+        Fighters winner = fighter1Wins > fighter2Wins ? fighter1 : fighter2;
+        victoryScreen.Show(winner.name, roundAnnouncement.GetWinnerIcon(winner.name));
     }
 
     private void EndMatch()
