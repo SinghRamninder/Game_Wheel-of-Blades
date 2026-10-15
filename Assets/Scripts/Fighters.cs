@@ -75,7 +75,7 @@ public class Fighters : MonoBehaviour
 
         ReadMovementInput();
 
-        if (Input.GetKeyDown(attackKey) && !TryCounterAttack())
+        if (Input.GetKeyDown(attackKey))
         {
             TryAttack();
         }
@@ -162,7 +162,7 @@ public class Fighters : MonoBehaviour
 
     public bool TryParry()
     {
-        if (State != CombatState.Idle) return false;
+        if (State != CombatState.Idle && State != CombatState.Staggered) return false;
 
         SetState(CombatState.Parrying);
         parrySucceeded = false;
@@ -186,7 +186,8 @@ public class Fighters : MonoBehaviour
     private void UpdateParry()
     {
         if (State != CombatState.Parrying || parrySucceeded || opponentSword == null) return;
-        if (!opponentSword.IsParryWindowOpen(fighterProperties.parryWindow)) return;
+        float window = opponentSword.IsCounterAttack ? fighterProperties.counterParryWindow : fighterProperties.parryWindow;
+        if (!opponentSword.IsParryWindowOpen(window)) return;
 
         if (lastParryPressTime < opponentSword.ParryWindowOpenTime - fighterProperties.parryInputBuffer) return;
 
@@ -272,7 +273,6 @@ public class Fighters : MonoBehaviour
         State = state;
         actionStartTime = Time.time;
 
-        // Actions play their own animation; walking is picked again once the fighter is idle.
         if (state != CombatState.Idle)
         {
             walkDirection = 0;
@@ -298,7 +298,6 @@ public class Fighters : MonoBehaviour
     {
         float dt = Time.fixedDeltaTime;
 
-        // A fighter who fell off the wheel keeps falling, even while the game is frozen.
         if (hasFallen)
         {
             fallVelocity.y -= 9.81f * dt;
@@ -306,8 +305,6 @@ public class Fighters : MonoBehaviour
             return;
         }
 
-        // Frozen during announcements: no walking, spin or knockback. A fighter on the wheel is still
-        // placed at its current angle, so a reset at the start of a round shows up straight away.
         if (GameState.IsFrozen)
         {
             PlaceOnWheel();

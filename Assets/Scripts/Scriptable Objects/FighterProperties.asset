@@ -20,11 +20,12 @@ MonoBehaviour:
   fallAngleDegree: 70
   attackRange: 0.8
   parryWindow: 0.3
+  counterParryWindow: 0.15
   parryInputBuffer: 0.12
   parryImpusle: 0.33
   counterAttackWindow: 0.54
   attackDamage: 10
   attackImpusle: 1
-  counterAttackDamage: 25
+  counterAttackDamage: 15
   counterAttackImpusle: 3
-  recoil: 0.3
+  recoil: 0.4

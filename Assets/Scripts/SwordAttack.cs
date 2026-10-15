@@ -16,6 +16,8 @@ public class SwordAttack : MonoBehaviour
     [SerializeField] private TrailRenderer trail;
     [Tooltip("Small glint on the blade when the parry window opens, so the defender can read it.")]
     [SerializeField] private GameObject parryCuePrefab;
+    [Tooltip("Counter attacks open their (shorter) parry window this many seconds after the counter starts.")]
+    [SerializeField] private float counterParryDelay = 0.1f;
 
     [Header("Sounds")]
     [SerializeField] private AudioClip[] swingSounds;
@@ -42,6 +44,7 @@ public class SwordAttack : MonoBehaviour
     private Vector3 bladeEndLocal;
     private Vector3 prevStart;
     private Vector3 prevEnd;
+    private float counterStartTime = -1f;
 
     private void Awake()
     {
@@ -90,12 +93,23 @@ public class SwordAttack : MonoBehaviour
         onGoingParry = false;
         canParryBeforeHit = false;
         Close();
+
+        counterStartTime = counterAttack ? Time.time : -1f;
+    }
+
+    private void Update()
+    {
+        if (counterStartTime >= 0f && Time.time - counterStartTime >= counterParryDelay)
+        {
+            counterStartTime = -1f;
+            AllowParryBeforeHit();
+        }
     }
 
     public void AllowParryBeforeHit()
     {
-        if (ownerFighter == null || ownerFighter.State != Fighters.CombatState.Attacking) return;
-        if (IsCounterAttack || onGoingParry) return;
+        if (ownerFighter == null || !ownerFighter.IsAttacking) return;
+        if (onGoingParry) return;
 
         canParryBeforeHit = true;
         ParryWindowOpenTime = Time.time;
@@ -111,7 +125,6 @@ public class SwordAttack : MonoBehaviour
         return canParryBeforeHit && !hasHit && !onGoingParry && Time.time - ParryWindowOpenTime <= window;
     }
 
-    // Animation event (via AttackEvents) just before the blade reaches the opponent.
     public void PlaySwingSound()
     {
         if (ownerFighter == null || !ownerFighter.IsAttacking || onGoingParry) return;
@@ -159,6 +172,7 @@ public class SwordAttack : MonoBehaviour
 
     public void Cancel()
     {
+        counterStartTime = -1f;
         Close();
     }
 

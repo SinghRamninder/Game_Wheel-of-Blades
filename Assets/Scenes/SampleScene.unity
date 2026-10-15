@@ -2539,6 +2539,7 @@ MonoBehaviour:
   bladeRadius: 0.035
   trail: {fileID: 1673602321}
   parryCuePrefab: {fileID: 2130097511974618880, guid: e2dddadd2c44bb9498e18c7ab8c9876e, type: 3}
+  counterParryDelay: 0.1
   swingSounds:
   - {fileID: 8300000, guid: 5706ae8e453fb5041a65d3a7d93b021d, type: 3}
   - {fileID: 8300000, guid: 14af9461ac601af4fa656b778592706f, type: 3}
@@ -4677,9 +4678,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
   moveLeftKey: 97
   moveRightKey: 100
-  attackKey: 32
+  attackKey: 119
   parryKey: 115
-  counterAttackKey: 119
+  counterAttackKey: 101
   startWalkAngle: -0.5
   walkAngle: 0
   hasFallen: 0
@@ -4967,7 +4968,7 @@ MonoBehaviour:
   fighters:
   - {fileID: 1377273654}
   - {fileID: 1898320059}
-  inertia: 15
+  inertia: 13
   damping: 1.8
   radius: 0
   spin: 0
@@ -5502,9 +5503,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
   moveLeftKey: 276
   moveRightKey: 275
-  attackKey: 8
+  attackKey: 273
   parryKey: 274
-  counterAttackKey: 273
+  counterAttackKey: 303
   startWalkAngle: 0.5
   walkAngle: 0
   hasFallen: 0
