@@ -21,10 +21,10 @@ MonoBehaviour:
   attackRange: 0.8
   parryWindow: 0.3
   parryInputBuffer: 0.12
-  parryImpusle: 1
+  parryImpusle: 0.33
   counterAttackWindow: 0.54
   attackDamage: 10
-  attackImpusle: 3
+  attackImpusle: 1
   counterAttackDamage: 25
-  counterAttackImpusle: 5
+  counterAttackImpusle: 3
   recoil: 0.3

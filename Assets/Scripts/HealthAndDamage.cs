@@ -60,6 +60,15 @@ public class HealthAndDamage : MonoBehaviour
         }
     }
 
+    public void ResetHealth()
+    {
+        currentHealth = maxHealth;
+        applyDamage = false;
+        wobbleTimer = 0f;
+        healthSlider.value = 1f;
+        rectTransform.localRotation = startRotation;
+    }
+
     public void TakeDamage(float damage)
     {
         TakeDamage(damage, transform.position + Vector3.up * 0.5f, Vector3.zero);

@@ -50,6 +50,7 @@ public class Fighters : MonoBehaviour
     private bool parrySucceeded = false;
     private bool canCounterAttack = false;
     private float counterAttackEndTime;
+    private bool canFight = true;
 
     private void Start()
     {
@@ -64,7 +65,7 @@ public class Fighters : MonoBehaviour
 
     private void Update()
     {
-        if (State == CombatState.Dead) return;
+        if (State == CombatState.Dead || !canFight) return;
 
         ReadMovementInput();
 
@@ -299,6 +300,35 @@ public class Fighters : MonoBehaviour
         float y = Mathf.Cos(walkAngle) * wheelController.radius;
 
         transform.position = new Vector3(wheelController.transform.position.x + x, wheelController.transform.position.y + y, startPosition.z);
+    }
+
+    public void SetCanFight(bool value)
+    {
+        canFight = value;
+        if (!value)
+        {
+            moveLeft = false;
+            moveRight = false;
+        }
+    }
+
+    public void ResetForRound()
+    {
+        walkAngle = startWalkAngle;
+        hasFallen = false;
+        slide = 0f;
+        fallVelocity = Vector3.zero;
+        moveLeft = false;
+        moveRight = false;
+        canCounterAttack = false;
+        parrySucceeded = false;
+
+        if (sword != null) sword.Cancel();
+        SetState(CombatState.Idle);
+        if (animator != null)
+        {
+            animator.Play(IdleState, 0, 0f);
+        }
     }
 
     public void Knock(float impulse)
