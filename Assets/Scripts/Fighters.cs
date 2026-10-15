@@ -23,6 +23,7 @@ public class Fighters : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] private GameObject parrySparksPrefab;
+    [SerializeField] private AudioClip[] parrySounds;
 
     [Header("Controls")]
     [SerializeField] private KeyCode moveLeftKey = KeyCode.A;
@@ -206,6 +207,7 @@ public class Fighters : MonoBehaviour
         opponent.OnAttackParried();
 
         CombatFeedback.Spawn(parrySparksPrefab, contact, Quaternion.LookRotation(Vector3.back));
+        CombatFeedback.PlaySound(parrySounds, 0.9f);
         CombatFeedback.HitStop(0.07f);
         CombatFeedback.Shake(0.015f, 0.12f);
     }

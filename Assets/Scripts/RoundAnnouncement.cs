@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
 
-// Shows "Round N" in the middle of the screen before a round starts:
-// the overlay fades in, the pirate flag pops in, the parchment banner unrolls, then everything fades out.
 public class RoundAnnouncement : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
@@ -22,6 +20,10 @@ public class RoundAnnouncement : MonoBehaviour
 
     private void Awake()
     {
+        roundText.enableAutoSizing = true;
+        roundText.fontSizeMax = roundText.fontSize;
+        roundText.fontSizeMin = roundText.fontSize * 0.45f;
+
         if (!showing)
         {
             canvasGroup.alpha = 0f;
@@ -31,8 +33,13 @@ public class RoundAnnouncement : MonoBehaviour
 
     public void Show(int round, bool finalRound)
     {
-        roundText.text = finalRound ? "Final Round" : "Round " + round;
-        timer = 0f;
+        ShowMessage(finalRound ? "Final Round" : "Round " + round);
+    }
+
+    public void ShowMessage(string message, float delay = 0f)
+    {
+        roundText.text = message;
+        timer = -delay;
         showing = true;
         gameObject.SetActive(true);
         Animate();
@@ -56,7 +63,6 @@ public class RoundAnnouncement : MonoBehaviour
 
     private void Animate()
     {
-        // Whole screen fade.
         float fadeOutStart = fadeInTime + holdTime;
         if (timer < fadeInTime)
         {
@@ -71,11 +77,9 @@ public class RoundAnnouncement : MonoBehaviour
             canvasGroup.alpha = 1f;
         }
 
-        // Flag pops in from big to normal size with a little overshoot.
         float iconProgress = Mathf.Clamp01(timer / (fadeInTime * 1.4f));
         icon.localScale = Vector3.one * Mathf.LerpUnclamped(1.6f, 1f, EaseOutBack(iconProgress));
 
-        // Banner unrolls sideways, then the text punches in.
         float bannerProgress = Mathf.Clamp01((timer - fadeInTime * 0.5f) / 0.35f);
         banner.localScale = new Vector3(EaseOutBack(bannerProgress), 1f, 1f);
 

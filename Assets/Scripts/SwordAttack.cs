@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SwordAttack : MonoBehaviour
@@ -17,6 +16,11 @@ public class SwordAttack : MonoBehaviour
     [SerializeField] private TrailRenderer trail;
     [Tooltip("Small glint on the blade when the parry window opens, so the defender can read it.")]
     [SerializeField] private GameObject parryCuePrefab;
+
+    [Header("Sounds")]
+    [SerializeField] private AudioClip[] swingSounds;
+    [SerializeField] private AudioClip[] counterSwingSounds;
+    [SerializeField] private AudioClip[] hitSounds;
 
     [HideInInspector] public bool canParryBeforeHit = false;
     [HideInInspector] public bool onGoingParry = false;
@@ -105,6 +109,21 @@ public class SwordAttack : MonoBehaviour
     public bool IsParryWindowOpen(float window)
     {
         return canParryBeforeHit && !hasHit && !onGoingParry && Time.time - ParryWindowOpenTime <= window;
+    }
+
+    // Animation event (via AttackEvents) just before the blade reaches the opponent.
+    public void PlaySwingSound()
+    {
+        if (ownerFighter == null || !ownerFighter.IsAttacking || onGoingParry) return;
+
+        if (IsCounterAttack)
+        {
+            CombatFeedback.PlaySound(counterSwingSounds, 0.8f);
+        }
+        else
+        {
+            CombatFeedback.PlaySound(swingSounds, 0.6f);
+        }
     }
 
     public void Open()
@@ -203,6 +222,8 @@ public class SwordAttack : MonoBehaviour
 
         opponentHealth.TakeDamage(damage, hitPoint, direction);
         SetKnock();
+
+        CombatFeedback.PlaySound(hitSounds, IsCounterAttack ? 1f : 0.85f, IsCounterAttack ? 0.9f : 1f);
 
         CombatFeedback.HitStop(IsCounterAttack ? 0.12f : 0.08f);
         CombatFeedback.Shake(IsCounterAttack ? 0.035f : 0.02f, 0.18f);

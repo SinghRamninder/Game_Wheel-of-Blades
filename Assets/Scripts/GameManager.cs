@@ -13,6 +13,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RoundIndicator fighter1RoundIndicator;
     [SerializeField] private RoundIndicator fighter2RoundIndicator;
 
+    [Header("Music")]
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip normalFightMusic;
+    [SerializeField] private AudioClip matchPointMusic;
+    [SerializeField] private float musicVolume = 0.5f;
+    [SerializeField] private float musicFadeOutTime = 1.5f;
+
+    [Header("Round Winner")]
+    [SerializeField] private float winnerBannerDelay = 0.6f;
+
     [Header("Match")]
     [SerializeField] private int totalRounds = 5;
     [SerializeField] private float roundDuration = 60f;
@@ -31,6 +41,7 @@ public class GameManager : MonoBehaviour
     private bool roundRunning = false;
     private bool waitingForAnnouncement = false;
     private bool matchOver = false;
+    private bool musicFadingOut = false;
 
     private void Start()
     {
@@ -43,6 +54,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        UpdateMusicFade();
+
         if (matchOver) return;
 
         if (waitingForAnnouncement)
@@ -113,8 +126,29 @@ public class GameManager : MonoBehaviour
         roundTimeLeft = roundDuration;
         timer.text = Mathf.CeilToInt(roundTimeLeft).ToString();
         roundAnnouncement.Show(currentRound, currentRound == totalRounds);
+        PlayRoundMusic();
         waitingForAnnouncement = true;
-        Debug.Log("Round " + currentRound + " / " + totalRounds + " started!");
+    }
+
+    private void PlayRoundMusic()
+    {
+        musicSource.clip = currentRound == totalRounds ? matchPointMusic : normalFightMusic;
+        musicSource.loop = true;
+        musicSource.volume = musicVolume;
+        musicFadingOut = false;
+        musicSource.Play();
+    }
+
+    private void UpdateMusicFade()
+    {
+        if (!musicFadingOut) return;
+
+        musicSource.volume = Mathf.MoveTowards(musicSource.volume, 0f, musicVolume / musicFadeOutTime * Time.unscaledDeltaTime);
+        if (musicSource.volume <= 0f)
+        {
+            musicSource.Stop();
+            musicFadingOut = false;
+        }
     }
 
     private Fighters GetWinnerByDeath(bool fighter1Dead, bool fighter2Dead)
@@ -135,6 +169,7 @@ public class GameManager : MonoBehaviour
         roundRunning = false;
         fighter1.SetCanFight(false);
         fighter2.SetCanFight(false);
+        musicFadingOut = true;
 
         if (winner == fighter1)
         {
@@ -154,6 +189,7 @@ public class GameManager : MonoBehaviour
 
         fighter1RoundIndicator.SetWins(fighter1Wins);
         fighter2RoundIndicator.SetWins(fighter2Wins);
+        roundAnnouncement.ShowMessage(winner != null ? winner.name + " Wins!" : "Draw!", winnerBannerDelay);
 
         Debug.Log("Score: " + fighter1.name + " " + fighter1Wins + " - " + fighter2Wins + " " + fighter2.name + " (ties: " + ties + ")");
 

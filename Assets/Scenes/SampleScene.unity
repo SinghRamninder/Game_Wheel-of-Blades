@@ -153,8 +153,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -135}
-  m_SizeDelta: {x: 250, y: 250}
+  m_AnchoredPosition: {x: 0, y: -129.1119}
+  m_SizeDelta: {x: 237.4448, y: 238.2239}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &56405184
 MonoBehaviour:
@@ -1636,6 +1636,16 @@ MonoBehaviour:
   bladeRadius: 0.035
   trail: {fileID: 1673602321}
   parryCuePrefab: {fileID: 2130097511974618880, guid: e2dddadd2c44bb9498e18c7ab8c9876e, type: 3}
+  swingSounds:
+  - {fileID: 8300000, guid: 5706ae8e453fb5041a65d3a7d93b021d, type: 3}
+  - {fileID: 8300000, guid: 14af9461ac601af4fa656b778592706f, type: 3}
+  - {fileID: 8300000, guid: 2b7531f8b98146e41ba497dceaeaaef8, type: 3}
+  counterSwingSounds:
+  - {fileID: 8300000, guid: 2e8e316347f8a264c9622f92ac045fa8, type: 3}
+  hitSounds:
+  - {fileID: 8300000, guid: ed615ef26d7a5004e9cfb32281df61d0, type: 3}
+  - {fileID: 8300000, guid: f64092eeee72b0e4285ee793c13fcf2f, type: 3}
+  - {fileID: 8300000, guid: 109cee6443d6d3c41aa5c287fae5e742, type: 3}
   canParryBeforeHit: 0
   onGoingParry: 0
 --- !u!4 &708617557
@@ -2514,6 +2524,46 @@ PrefabInstance:
       propertyPath: parryCuePrefab
       value: 
       objectReference: {fileID: 2130097511974618880, guid: e2dddadd2c44bb9498e18c7ab8c9876e, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: hitSounds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: swingSounds.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'hitSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: ed615ef26d7a5004e9cfb32281df61d0, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'hitSounds.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: f64092eeee72b0e4285ee793c13fcf2f, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'hitSounds.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 109cee6443d6d3c41aa5c287fae5e742, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'swingSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 5706ae8e453fb5041a65d3a7d93b021d, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'swingSounds.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 14af9461ac601af4fa656b778592706f, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'swingSounds.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 2b7531f8b98146e41ba497dceaeaaef8, type: 3}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: counterSwingSounds.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8985501785514892662, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
+      propertyPath: 'counterSwingSounds.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 2e8e316347f8a264c9622f92ac045fa8, type: 3}
     - target: {fileID: 4764510604297581600, guid: 64bd14ac020b56d4abb677e5791db699, type: 3}
       propertyPath: m_Name
       value: Pirate_Sword
@@ -2825,8 +2875,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -330}
-  m_SizeDelta: {x: 1150, y: 288}
+  m_AnchoredPosition: {x: 0, y: -333}
+  m_SizeDelta: {x: 1325.1785, y: 313.5844}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1102468266
 MonoBehaviour:
@@ -2984,7 +3034,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -322}
+  m_AnchoredPosition: {x: 0, y: -332}
   m_SizeDelta: {x: 1000, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208422174
@@ -3121,8 +3171,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -135}
-  m_SizeDelta: {x: 240, y: 200}
+  m_AnchoredPosition: {x: 0, y: -140}
+  m_SizeDelta: {x: 227.947, y: 190.5791}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1252009398
 MonoBehaviour:
@@ -3319,6 +3369,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1329247119}
   - component: {fileID: 1329247118}
+  - component: {fileID: 1329247120}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -3345,6 +3396,12 @@ MonoBehaviour:
   roundAnnouncement: {fileID: 499870055}
   fighter1RoundIndicator: {fileID: 584337061}
   fighter2RoundIndicator: {fileID: 1150964797}
+  musicSource: {fileID: 1329247120}
+  normalFightMusic: {fileID: 8300000, guid: 144458040f70dd846b8e159c7f84f8a9, type: 3}
+  matchPointMusic: {fileID: 8300000, guid: 1968e31c07630234bb323587c15ad3f9, type: 3}
+  musicVolume: 1
+  musicFadeOutTime: 1.5
+  winnerBannerDelay: 0.6
   totalRounds: 5
   roundDuration: 60
   timeBetweenRounds: 3
@@ -3363,6 +3420,103 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1329247120
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329247117}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1377273653
 GameObject:
   m_ObjectHideFlags: 0
@@ -3376,7 +3530,7 @@ GameObject:
   - component: {fileID: 1377273657}
   - component: {fileID: 1377273656}
   m_Layer: 0
-  m_Name: Fighter1Root
+  m_Name: Player 1
   m_TagString: Pirate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3399,8 +3553,11 @@ MonoBehaviour:
   opponent: {fileID: 1898320059}
   animator: {fileID: 905444624}
   mirrorAnimations: 0
-  walkAnimationSpeed: 0.8268097
+  walkAnimationSpeed: 0.5
   parrySparksPrefab: {fileID: 3792076665709362566, guid: cf3330b518a8c5c49bed198ff0ada638, type: 3}
+  parrySounds:
+  - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
+  - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
   moveLeftKey: 97
   moveRightKey: 100
   attackKey: 32
@@ -4123,7 +4280,7 @@ GameObject:
   - component: {fileID: 1898320062}
   - component: {fileID: 1898320061}
   m_Layer: 0
-  m_Name: Fighter2Root
+  m_Name: Player 2
   m_TagString: Pirate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4146,8 +4303,11 @@ MonoBehaviour:
   opponent: {fileID: 1377273654}
   animator: {fileID: 1435223106}
   mirrorAnimations: 1
-  walkAnimationSpeed: 0.8268097
+  walkAnimationSpeed: 0.5
   parrySparksPrefab: {fileID: 3792076665709362566, guid: cf3330b518a8c5c49bed198ff0ada638, type: 3}
+  parrySounds:
+  - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
+  - {fileID: 8300000, guid: 3785e91879e10b046b995d62c6015b8b, type: 3}
   moveLeftKey: 276
   moveRightKey: 275
   attackKey: 8
