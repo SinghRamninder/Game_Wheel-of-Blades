@@ -174,24 +174,19 @@ public class GameManager : MonoBehaviour
         if (winner == fighter1)
         {
             fighter1Wins++;
-            Debug.Log("Round " + currentRound + ": " + fighter1.name + " wins!");
         }
         else if (winner == fighter2)
         {
             fighter2Wins++;
-            Debug.Log("Round " + currentRound + ": " + fighter2.name + " wins!");
         }
         else
         {
             ties++;
-            Debug.Log("Round " + currentRound + ": Tie!");
         }
 
         fighter1RoundIndicator.SetWins(fighter1Wins);
         fighter2RoundIndicator.SetWins(fighter2Wins);
         roundAnnouncement.ShowMessage(winner != null ? winner.name + " Wins!" : "Draw!", winnerBannerDelay);
-
-        Debug.Log("Score: " + fighter1.name + " " + fighter1Wins + " - " + fighter2Wins + " " + fighter2.name + " (ties: " + ties + ")");
 
         if (currentRound >= totalRounds)
         {

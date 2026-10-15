@@ -1043,6 +1043,10 @@ MonoBehaviour:
   icon: {fileID: 1940711411}
   banner: {fileID: 1102468265}
   roundText: {fileID: 1208422174}
+  winnerIcon: {fileID: 1940711412}
+  player1Winner: {fileID: 21300000, guid: b80c9be14c708de47a72233b54e2a1fc, type: 3}
+  player2Winner: {fileID: 21300000, guid: 1b08ff45b7afe1a4bb0cb14b59d83902, type: 3}
+  defaultIcon: {fileID: 21300000, guid: 4f3e1d938787a9c439fddca48dddb9d0, type: 3}
   fadeInTime: 0.35
   holdTime: 1.4
   fadeOutTime: 0.4
@@ -1580,7 +1584,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4f3e1d938787a9c439fddca48dddb9d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1b08ff45b7afe1a4bb0cb14b59d83902, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2823,7 +2827,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4f3e1d938787a9c439fddca48dddb9d0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b80c9be14c708de47a72233b54e2a1fc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

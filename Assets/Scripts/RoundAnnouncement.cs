@@ -1,5 +1,7 @@
-using UnityEngine;
+using System;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class RoundAnnouncement : MonoBehaviour
 {
@@ -7,6 +9,10 @@ public class RoundAnnouncement : MonoBehaviour
     [SerializeField] private RectTransform icon;
     [SerializeField] private RectTransform banner;
     [SerializeField] private TMP_Text roundText;
+    [SerializeField] private Image winnerIcon;
+    [SerializeField] private Sprite player1Winner;
+    [SerializeField] private Sprite player2Winner;
+    [SerializeField] private Sprite defaultIcon;
 
     [Header("Timing")]
     [SerializeField] private float fadeInTime = 0.35f;
@@ -39,6 +45,20 @@ public class RoundAnnouncement : MonoBehaviour
     public void ShowMessage(string message, float delay = 0f)
     {
         roundText.text = message;
+        
+        if (message.Contains("Player 1", StringComparison.OrdinalIgnoreCase))
+        {
+            winnerIcon.sprite = player1Winner;
+        }
+        else if (message.Contains("Player 2", StringComparison.OrdinalIgnoreCase))
+        {
+            winnerIcon.sprite = player2Winner;
+        }
+        else
+        {
+            winnerIcon.sprite = defaultIcon;
+        }
+
         timer = -delay;
         showing = true;
         gameObject.SetActive(true);
